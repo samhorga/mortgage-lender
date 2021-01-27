@@ -129,7 +129,7 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
 
         lender.checkLoanApplication(loanApplication);
 
-        lender.checkForExpiration(loanApplication);
+        lender.checkForExpiration(loanApplication, LocalDate.of(2021, 1, 27));
 
         assertEquals(400000, lender.getAvailableFunds(), 0.1);
         assertEquals("expired", loanApplication.getStatus());
@@ -153,9 +153,9 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
         lender.checkLoanApplication(loanApplication1);
         lender.checkLoanApplication(loanApplication2);
 
-        lender.checkForExpiration(loanApplication);
-        lender.checkForExpiration(loanApplication1);
-        lender.checkForExpiration(loanApplication2);
+        lender.checkForExpiration(loanApplication, LocalDate.of(2021, 1, 27));
+        lender.checkForExpiration(loanApplication1, LocalDate.of(2021, 1, 27));
+        lender.checkForExpiration(loanApplication2, LocalDate.of(2021, 1, 27));
 
 
         List<LoanApplication> loanApplicationsApproved = lender.filterBy("approved");

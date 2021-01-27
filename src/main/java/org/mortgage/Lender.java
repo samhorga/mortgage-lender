@@ -77,8 +77,8 @@ public class Lender {
         }
     }
 
-    public void checkForExpiration(LoanApplication loanApplication) {
-        Period period = Period.between(loanApplication.getApprovedDate(), LocalDate.now());
+    public void checkForExpiration(LoanApplication loanApplication, LocalDate todaysDate) {
+        Period period = Period.between(loanApplication.getApprovedDate(), todaysDate);
         int diff = Math.abs(period.getDays());
         if (diff >= 3) {
             this.setAvailableFunds(this.getAvailableFunds() + this.getPendingFunds());
