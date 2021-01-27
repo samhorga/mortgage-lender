@@ -152,6 +152,9 @@ public class LenderTests {
         //expired
         LoanApplication loanApplication2 = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 24));
+        //denied
+        LoanApplication loanApplication3 = new LoanApplication(250000d, 21, 100,
+                100000, "", 0, "", LocalDate.of(2021, 1, 24));
 
 
         //approved
@@ -175,5 +178,31 @@ public class LenderTests {
         lender.checkForExpiration(loanApplication2, LocalDate.of(2021, 1, 28));
         List<LoanApplication> loanApplicationsExpired = lender.filterBy("expired");
         assertEquals("expired", loanApplicationsExpired.get(0).getStatus());
+
+        //denied
+        lender = new Lender();
+        lender.addFunds(250000d);
+        lender.checkLoanApplication(loanApplication3);
+        List<LoanApplication> loanApplicationsDenied = lender.filterBy("denied");
+        assertEquals("denied", loanApplicationsDenied.get(0).getStatus());
+
+        //accepted
+        lender = new Lender();
+        lender.addFunds(250000d);
+        lender.checkLoanApplication(loanApplication);
+        candidate = new Candidate(loanApplication, lender);
+        candidate.acceptLoanOffer(loanApplication);
+        List<LoanApplication> loanApplicationsAccepted = lender.filterBy("accepted");
+        assertEquals("accepted", loanApplicationsAccepted.get(0).getStatus());
+
+        //rejected
+        lender = new Lender();
+        lender.addFunds(250000d);
+        lender.checkLoanApplication(loanApplication);
+        candidate = new Candidate(loanApplication, lender);
+        candidate.rejectLoanOffer(loanApplication);
+        List<LoanApplication> loanApplicationsRejected = lender.filterBy("rejected");
+        assertEquals("rejected", loanApplicationsRejected.get(0).getStatus());
+
     }
 }

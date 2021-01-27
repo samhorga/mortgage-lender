@@ -38,7 +38,6 @@ public class Lender {
                 && loanApplication.getSavings() >= (0.25 * loanApplication.getRequestedAmount())) {
             this.loanApplicationList.add(loanApplication);
             loanApplication.setQualification("qualified");
-            loanApplication.setStatus("qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount());
             if (!processLoan(loanApplication)) {
                 throw new FundsNotAvailableException("Funds not available, please do not proceed.");
