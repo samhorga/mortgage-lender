@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Lender {
-    private List<LoanApplication> loanApplicationList = new ArrayList<>();
+    private final List<LoanApplication> loanApplicationList = new ArrayList<>();
     private double availableFunds;
     private double pendingFunds;
 
@@ -38,11 +38,11 @@ public class Lender {
             loanApplication.setQualification("qualified");
             loanApplication.setStatus("qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount());
-            if(!processLoan(loanApplication)){
+            if (!processLoan(loanApplication)) {
                 return "Funds not available!! Do not Proceed!!";
             }
             this.pendingFunds = loanApplication.getRequestedAmount();
-            this.availableFunds-= loanApplication.getRequestedAmount();
+            this.availableFunds -= loanApplication.getRequestedAmount();
 
             return loanApplication.getQualification();
         } else if (loanApplication.getDti() < 36 && loanApplication.getCreditScore() > 620
@@ -50,11 +50,11 @@ public class Lender {
             this.loanApplicationList.add(loanApplication);
             loanApplication.setQualification("partially qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount() - loanApplication.getSavings());
-            if(!processLoan(loanApplication)){
+            if (!processLoan(loanApplication)) {
                 return "Funds not available!! Do not Proceed!!";
             }
             this.pendingFunds = loanApplication.getRequestedAmount();
-            this.availableFunds-= loanApplication.getRequestedAmount();
+            this.availableFunds -= loanApplication.getRequestedAmount();
             return loanApplication.getQualification();
         } else {
             this.loanApplicationList.add(loanApplication);
@@ -65,24 +65,20 @@ public class Lender {
 
     }
 
-    public boolean processLoan(LoanApplication loanApplication){
-        if(loanApplication.getLoan_amount() > this.availableFunds)
-        {
+    private boolean processLoan(LoanApplication loanApplication) {
+        if (loanApplication.getLoan_amount() > this.availableFunds) {
             loanApplication.setStatus("on hold");
             return false;
-        }
-        else{
+        } else {
             loanApplication.setStatus("approved");
             return true;
         }
-
     }
 
     public void checkForExpiration(LoanApplication loanApplication) {
         Period period = Period.between(loanApplication.getApprovedDate(), LocalDate.now());
         int diff = Math.abs(period.getDays());
-        if(diff >= 3) {
-            //Then the loan amount is move from the pending funds back to available funds
+        if (diff >= 3) {
             this.setAvailableFunds(this.getAvailableFunds() + this.getPendingFunds());
             this.setPendingFunds(this.getPendingFunds() - loanApplication.getRequestedAmount());
             loanApplication.setStatus("expired");

@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
