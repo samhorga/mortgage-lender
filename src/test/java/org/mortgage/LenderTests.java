@@ -2,6 +2,7 @@ package org.mortgage;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mortgage.exceptions.FundsNotAvailableException;
 
 import java.time.LocalDate;
@@ -54,11 +55,11 @@ public class LenderTests {
         assertEquals(expected, loanApplication.getQualification());
     }
 
-    @Test(expected = FundsNotAvailableException.class)
+    @Test
     public void loanWarningWhenIhaveInsufficientFunds() {
         LoanApplication loanApplication = new LoanApplication(550000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2023, 1, 24));
-        lender.checkLoanApplication(loanApplication);
+        Assertions.assertThrows(FundsNotAvailableException.class, ()->{lender.checkLoanApplication(loanApplication); });
         assertEquals("on hold", loanApplication.getStatus());
     }
 
@@ -140,32 +141,28 @@ public class LenderTests {
     When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
     Then I should see a list of loans and their details
      */
-    @Test(expected = FundsNotAvailableException.class)
+    @Test
     public void filterByStatus() {
+        //approved
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 27));
+        //on hold
         LoanApplication loanApplication1 = new LoanApplication(550000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 27));
+        //expired
         LoanApplication loanApplication2 = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 24));
 
         lender.checkLoanApplication(loanApplication);
-        lender.checkLoanApplication(loanApplication1);
-        lender.checkLoanApplication(loanApplication2);
-
-        lender.checkForExpiration(loanApplication, LocalDate.of(2021, 1, 27));
-        lender.checkForExpiration(loanApplication1, LocalDate.of(2021, 1, 27));
-        lender.checkForExpiration(loanApplication2, LocalDate.of(2021, 1, 27));
-
-
         List<LoanApplication> loanApplicationsApproved = lender.filterBy("approved");
-
         assertFalse(loanApplicationsApproved.isEmpty());
         assertEquals(loanApplication, lender.getLoanApplicationList().get(0));
 
-        List<LoanApplication> loanApplicationsExpired = lender.filterBy("expired");
+        lender = new Lender();
 
-        assertFalse(loanApplicationsExpired.isEmpty());
-        assertEquals(loanApplication2, lender.getLoanApplicationList().get(2));
+
+        Assertions.assertThrows(FundsNotAvailableException.class, ()->{lender.checkLoanApplication(loanApplication1); });
+        List<LoanApplication> loanApplicationsOnHold = lender.filterBy("on hold");
+        assertFalse(loanApplicationsOnHold.isEmpty());
     }
 }
