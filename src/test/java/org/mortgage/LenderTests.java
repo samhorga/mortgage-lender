@@ -12,8 +12,8 @@ import static org.junit.Assert.*;
 
 public class LenderTests {
 
-    Lender lender;
-    Candidate candidate;
+    private Lender lender;
+    private Candidate candidate;
 
     @Before
     public void setUp() {
@@ -33,20 +33,20 @@ public class LenderTests {
        Then my available funds should be <total> */
 
     @Test
-    public void addMoneyALender() {
+    public void addMoneyAsLender() {
         lender.addFunds(100000);
 
         assertEquals(500000, lender.getAvailableFunds(), 0.1);
     }
-/*
-Given I have <available_funds> in available funds
-When I process a qualified loan
-Then the loan status is set to <status>
 
-When I process a not qualified loan
-Then I should see a warning to not proceed
- */
+    /*
+    Given I have <available_funds> in available funds
+    When I process a qualified loan
+    Then the loan status is set to <status>
 
+    When I process a not qualified loan
+    Then I should see a warning to not proceed
+    */
     @Test
 public void approveLoansOnlyWhenIhaveAvailableFunds(){
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
@@ -85,9 +85,8 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
     Then the loan amount is removed from the pending funds
     And the loan status is marked as accepted
      */
-
     @Test
-    public void processAprovedLoan() {
+    public void processApprovedLoan() {
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2023, 1, 24));
         lender.checkLoanApplication(loanApplication);
@@ -142,7 +141,6 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
     When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
     Then I should see a list of loans and their details
      */
-
     @Test
     public void filterByStatus() {
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
@@ -159,6 +157,7 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
         lender.checkForExpiration(loanApplication);
         lender.checkForExpiration(loanApplication1);
         lender.checkForExpiration(loanApplication2);
+
 
         List<LoanApplication> loanApplicationsApproved = lender.filterBy("approved");
 

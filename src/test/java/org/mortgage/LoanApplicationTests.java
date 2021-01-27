@@ -9,9 +9,9 @@ import static org.junit.Assert.assertEquals;
 
 public class LoanApplicationTests {
 
-    LoanApplication loanApplication;
-    Candidate candidate;
-    Lender lender;
+    private LoanApplication loanApplication;
+    private Candidate candidate;
+    private Lender lender;
 
     @Before
     public void setUp() {

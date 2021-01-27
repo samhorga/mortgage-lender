@@ -70,5 +70,7 @@ public class LoanApplication {
         this.loan_amount = loan_amount;
     }
 
-
+    public void setApprovedDate(LocalDate approvedDate) {
+        this.approvedDate = approvedDate;
+    }
 }

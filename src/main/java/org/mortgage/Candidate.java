@@ -2,9 +2,9 @@ package org.mortgage;
 
 public class Candidate {
 
-    private LoanApplication loanApplication;
+    private final LoanApplication loanApplication;
 
-    private Lender lender;
+    private final Lender lender;
 
     public Candidate(LoanApplication loanApplication, Lender lender) {
         this.loanApplication = loanApplication;
