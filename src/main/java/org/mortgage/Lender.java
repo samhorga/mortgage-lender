@@ -16,6 +16,14 @@ public class Lender {
         return pendingFunds;
     }
 
+    public void setAvailableFunds(double availableFunds) {
+        this.availableFunds = availableFunds;
+    }
+
+    public void setPendingFunds(double pendingFunds) {
+        this.pendingFunds = pendingFunds;
+    }
+
     public String checkLoanApplication(LoanApplication loanApplication) {
         if (loanApplication.getDti() < 36 && loanApplication.getCreditScore() > 620
                 && loanApplication.getSavings() >= (0.25 * loanApplication.getRequestedAmount())) {

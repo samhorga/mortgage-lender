@@ -13,7 +13,6 @@ public class LoanApplicationTests {
 
     @Before
     public void setUp() {
-        candidate = new Candidate();
         lender = new Lender();
     }
 
@@ -25,7 +24,7 @@ public class LoanApplicationTests {
     @Test
     public void checkLoanApplicationForFullAmount() {
         loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
-        candidate.setLoanApplication(loanApplication);
+        candidate = new Candidate(loanApplication, lender);
         lender.checkLoanApplication(candidate.getLoanApplication());
         assertEquals("qualified", candidate.getLoanApplication().getQualification());
         assertEquals(250000d, candidate.getLoanApplication().getLoan_amount(), 0.1);
