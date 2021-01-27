@@ -2,8 +2,12 @@ package org.mortgage;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Lender {
+    private List<LoanApplication> loanApplicationList = new ArrayList<>();
     private double availableFunds;
     private double pendingFunds;
 
@@ -30,6 +34,7 @@ public class Lender {
     public String checkLoanApplication(LoanApplication loanApplication) {
         if (loanApplication.getDti() < 36 && loanApplication.getCreditScore() > 620
                 && loanApplication.getSavings() >= (0.25 * loanApplication.getRequestedAmount())) {
+            this.loanApplicationList.add(loanApplication);
             loanApplication.setQualification("qualified");
             loanApplication.setStatus("qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount());
@@ -42,6 +47,7 @@ public class Lender {
             return loanApplication.getQualification();
         } else if (loanApplication.getDti() < 36 && loanApplication.getCreditScore() > 620
                 && (loanApplication.getRequestedAmount() / loanApplication.getSavings()) > 4) {
+            this.loanApplicationList.add(loanApplication);
             loanApplication.setQualification("partially qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount() - loanApplication.getSavings());
             if(!processLoan(loanApplication)){
@@ -51,6 +57,7 @@ public class Lender {
             this.availableFunds-= loanApplication.getRequestedAmount();
             return loanApplication.getQualification();
         } else {
+            this.loanApplicationList.add(loanApplication);
             loanApplication.setStatus("denied");
             loanApplication.setQualification("not qualified");
             return loanApplication.getQualification();
@@ -80,5 +87,13 @@ public class Lender {
             this.setPendingFunds(this.getPendingFunds() - loanApplication.getRequestedAmount());
             loanApplication.setStatus("expired");
         }
+    }
+
+    public List<LoanApplication> getLoanApplicationList() {
+        return loanApplicationList;
+    }
+
+    public List<LoanApplication> filterBy(String criteria) {
+        return loanApplicationList.stream().filter(loanApplication -> loanApplication.getStatus().equals(criteria)).collect(Collectors.toList());
     }
 }

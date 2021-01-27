@@ -6,8 +6,9 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class LenderTests {
 
@@ -136,4 +137,37 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
         assertEquals("expired", loanApplication.getStatus());
     }
 
+    /*
+    Given there are loans in my system
+    When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
+    Then I should see a list of loans and their details
+     */
+
+    @Test
+    public void filterByStatus() {
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2021, 1, 27));
+        LoanApplication loanApplication1 = new LoanApplication(550000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2021, 1, 27));
+        LoanApplication loanApplication2 = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2021, 1, 24));
+
+        lender.checkLoanApplication(loanApplication);
+        lender.checkLoanApplication(loanApplication1);
+        lender.checkLoanApplication(loanApplication2);
+
+        lender.checkForExpiration(loanApplication);
+        lender.checkForExpiration(loanApplication1);
+        lender.checkForExpiration(loanApplication2);
+
+        List<LoanApplication> loanApplicationsApproved = lender.filterBy("approved");
+
+        assertFalse(loanApplicationsApproved.isEmpty());
+        assertEquals(loanApplication, lender.getLoanApplicationList().get(0));
+
+        List<LoanApplication> loanApplicationsExpired = lender.filterBy("expired");
+
+        assertFalse(loanApplicationsExpired.isEmpty());
+        assertEquals(loanApplication2, lender.getLoanApplicationList().get(2));
+    }
 }
