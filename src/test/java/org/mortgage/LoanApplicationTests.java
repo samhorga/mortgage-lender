@@ -27,8 +27,6 @@ public class LoanApplicationTests {
         loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
         candidate.setLoanApplication(loanApplication);
         lender.checkLoanApplication(candidate.getLoanApplication());
-
-        assertEquals("qualified", candidate.getLoanApplication().getStatus());
         assertEquals("qualified", candidate.getLoanApplication().getQualification());
         assertEquals(250000d, candidate.getLoanApplication().getLoan_amount(), 0.1);
     }
@@ -38,8 +36,6 @@ public class LoanApplicationTests {
         loanApplication = new LoanApplication(250000d, 30, 700, 50000, "", 0, "");
         candidate.setLoanApplication(loanApplication);
         lender.checkLoanApplication(candidate.getLoanApplication());
-
-        assertEquals("partially qualified", candidate.getLoanApplication().getStatus());
         assertEquals("partially qualified", candidate.getLoanApplication().getQualification());
         assertEquals(200000d, candidate.getLoanApplication().getLoan_amount(), 0.1);
     }

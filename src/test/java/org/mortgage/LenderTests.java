@@ -32,6 +32,26 @@ public class LenderTests {
 
         assertEquals(500000, lender.getAvailableFunds(), 0.1);
     }
+/*
+Given I have <available_funds> in available funds
+When I process a qualified loan
+Then the loan status is set to <status>
 
+When I process a not qualified loan
+Then I should see a warning to not proceed
+ */
 
+    @Test
+public void approveLoansOnlyWhenIhaveAvailableFunds(){
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        String expected = lender.checkLoanApplication(loanApplication);
+        assertEquals(expected,loanApplication.getStatus());
+    }
+
+    @Test
+    public void loanWarningWhenIhaveInsufficientFunds(){
+        LoanApplication loanApplication = new LoanApplication(550000d, 21, 700, 100000, "", 0, "");
+        assertEquals("Funds not available!! Do not Proceed!!",lender.checkLoanApplication(loanApplication));
+        assertEquals("on hold",loanApplication.getStatus());
+    }
 }
