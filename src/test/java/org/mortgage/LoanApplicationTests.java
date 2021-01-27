@@ -16,6 +16,7 @@ public class LoanApplicationTests {
     @Before
     public void setUp() {
         lender = new Lender();
+        lender.addFunds(550000d);
     }
 
     /* Given a loan applicant with <dti>, <credit_score>, and <savings>

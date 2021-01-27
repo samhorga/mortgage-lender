@@ -2,6 +2,7 @@ package org.mortgage;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mortgage.exceptions.FundsNotAvailableException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,11 +54,11 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
         assertEquals(expected,loanApplication.getQualification());
     }
 
-    @Test
+    @Test(expected = FundsNotAvailableException.class)
     public void loanWarningWhenIhaveInsufficientFunds(){
         LoanApplication loanApplication = new LoanApplication(550000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2023, 1, 24));
-        assertEquals("Funds not available!! Do not Proceed!!",lender.checkLoanApplication(loanApplication));
+        lender.checkLoanApplication(loanApplication);
         assertEquals("on hold",loanApplication.getStatus());
     }
 
@@ -139,7 +140,7 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
     When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
     Then I should see a list of loans and their details
      */
-    @Test
+    @Test(expected = FundsNotAvailableException.class)
     public void filterByStatus() {
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 27));

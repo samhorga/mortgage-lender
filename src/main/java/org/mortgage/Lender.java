@@ -1,5 +1,7 @@
 package org.mortgage;
 
+import org.mortgage.exceptions.FundsNotAvailableException;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class Lender {
             loanApplication.setStatus("qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount());
             if (!processLoan(loanApplication)) {
-                return "Funds not available!! Do not Proceed!!";
+                throw new FundsNotAvailableException("Funds not available, please do not proceed.");
             }
             this.pendingFunds = loanApplication.getRequestedAmount();
             this.availableFunds -= loanApplication.getRequestedAmount();
@@ -51,7 +53,7 @@ public class Lender {
             loanApplication.setQualification("partially qualified");
             loanApplication.setLoan_amount(loanApplication.getRequestedAmount() - loanApplication.getSavings());
             if (!processLoan(loanApplication)) {
-                return "Funds not available!! Do not Proceed!!";
+                throw new FundsNotAvailableException("Funds not available, please do not proceed.");
             }
             this.pendingFunds = loanApplication.getRequestedAmount();
             this.availableFunds -= loanApplication.getRequestedAmount();
