@@ -153,16 +153,27 @@ public class LenderTests {
         LoanApplication loanApplication2 = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2021, 1, 24));
 
+
+        //approved
         lender.checkLoanApplication(loanApplication);
         List<LoanApplication> loanApplicationsApproved = lender.filterBy("approved");
         assertFalse(loanApplicationsApproved.isEmpty());
         assertEquals(loanApplication, lender.getLoanApplicationList().get(0));
+        assertEquals("approved", loanApplication.getStatus());
 
+        //on hold
         lender = new Lender();
-
-
         Assertions.assertThrows(FundsNotAvailableException.class, ()->{lender.checkLoanApplication(loanApplication1); });
         List<LoanApplication> loanApplicationsOnHold = lender.filterBy("on hold");
         assertFalse(loanApplicationsOnHold.isEmpty());
+        assertEquals("on hold", loanApplicationsOnHold.get(0).getStatus());
+
+        //expired
+        lender = new Lender();
+        lender.addFunds(250000d);
+        lender.checkLoanApplication(loanApplication2);
+        lender.checkForExpiration(loanApplication2, LocalDate.of(2021, 1, 28));
+        List<LoanApplication> loanApplicationsExpired = lender.filterBy("expired");
+        assertEquals("expired", loanApplicationsExpired.get(0).getStatus());
     }
 }
