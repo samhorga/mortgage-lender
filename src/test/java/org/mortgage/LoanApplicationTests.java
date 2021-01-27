@@ -24,21 +24,23 @@ public class LoanApplicationTests {
     And their loan status is <status> */
     @Test
     public void checkLoanApplicationForFullAmount() {
-        loanApplication = new LoanApplication(250.000, 21, 700, 100.000, "", 250000, "");
+        loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
         candidate.setLoanApplication(loanApplication);
         lender.checkLoanApplication(candidate.getLoanApplication());
 
         assertEquals("qualified", candidate.getLoanApplication().getStatus());
         assertEquals("qualified", candidate.getLoanApplication().getQualification());
+        assertEquals(250000d, candidate.getLoanApplication().getLoan_amount(), 0.1);
     }
 
     @Test
     public void checkLoanApplicationForPartialAmount() {
-        loanApplication = new LoanApplication(250.000, 30, 700, 50.000, "", 250000, "");
+        loanApplication = new LoanApplication(250000d, 30, 700, 50000, "", 0, "");
         candidate.setLoanApplication(loanApplication);
         lender.checkLoanApplication(candidate.getLoanApplication());
 
         assertEquals("partially qualified", candidate.getLoanApplication().getStatus());
         assertEquals("partially qualified", candidate.getLoanApplication().getQualification());
+        assertEquals(200000d, candidate.getLoanApplication().getLoan_amount(), 0.1);
     }
 }

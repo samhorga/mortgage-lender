@@ -55,4 +55,8 @@ public class LoanApplication {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setLoan_amount(double loan_amount) {
+        this.loan_amount = loan_amount;
+    }
 }
