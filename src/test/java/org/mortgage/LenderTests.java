@@ -45,7 +45,7 @@ Then I should see a warning to not proceed
 public void approveLoansOnlyWhenIhaveAvailableFunds(){
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
         String expected = lender.checkLoanApplication(loanApplication);
-        assertEquals(expected,loanApplication.getStatus());
+        assertEquals(expected,loanApplication.getQualification());
     }
 
     @Test
@@ -53,5 +53,15 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
         LoanApplication loanApplication = new LoanApplication(550000d, 21, 700, 100000, "", 0, "");
         assertEquals("Funds not available!! Do not Proceed!!",lender.checkLoanApplication(loanApplication));
         assertEquals("on hold",loanApplication.getStatus());
+    }
+
+    @Test
+    public void moveAvailableFundsToPendingFundsIfApproved() {
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        double expectedAvailableFunds = lender.getAvailableFunds() - loanApplication.getRequestedAmount();
+        double expectedPendingFunds = loanApplication.getRequestedAmount();
+        lender.checkLoanApplication(loanApplication);
+        assertEquals(expectedAvailableFunds, lender.getAvailableFunds(), 0.1);
+        assertEquals(expectedPendingFunds, lender.getPendingFunds(), 0.1);
     }
 }

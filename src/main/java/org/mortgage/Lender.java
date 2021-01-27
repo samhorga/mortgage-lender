@@ -2,6 +2,7 @@ package org.mortgage;
 
 public class Lender {
     private double availableFunds;
+    private double pendingFunds;
 
     public void addFunds(double funds) {
         availableFunds += funds;
@@ -9,6 +10,10 @@ public class Lender {
 
     public double getAvailableFunds() {
         return availableFunds;
+    }
+
+    public double getPendingFunds() {
+        return pendingFunds;
     }
 
     public String checkLoanApplication(LoanApplication loanApplication) {
@@ -20,6 +25,9 @@ public class Lender {
             if(!processLoan(loanApplication)){
                 return "Funds not available!! Do not Proceed!!";
             }
+            this.pendingFunds = loanApplication.getRequestedAmount();
+            this.availableFunds-= loanApplication.getRequestedAmount();
+
             return loanApplication.getQualification();
         } else if (loanApplication.getDti() < 36 && loanApplication.getCreditScore() > 620
                 && (loanApplication.getRequestedAmount() / loanApplication.getSavings()) > 4) {
@@ -28,6 +36,8 @@ public class Lender {
             if(!processLoan(loanApplication)){
                 return "Funds not available!! Do not Proceed!!";
             }
+            this.pendingFunds = loanApplication.getRequestedAmount();
+            this.availableFunds-= loanApplication.getRequestedAmount();
             return loanApplication.getQualification();
         } else {
             loanApplication.setStatus("denied");
@@ -45,7 +55,6 @@ public class Lender {
         }
         else{
             loanApplication.setStatus("approved");
-            this.availableFunds -= loanApplication.getRequestedAmount();
             return true;
         }
 
