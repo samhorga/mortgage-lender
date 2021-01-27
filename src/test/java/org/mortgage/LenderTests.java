@@ -47,19 +47,19 @@ public class LenderTests {
     Then I should see a warning to not proceed
     */
     @Test
-public void approveLoansOnlyWhenIhaveAvailableFunds(){
+    public void approveLoansOnlyWhenIhaveAvailableFunds() {
         LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2023, 1, 24));
         String expected = lender.checkLoanApplication(loanApplication);
-        assertEquals(expected,loanApplication.getQualification());
+        assertEquals(expected, loanApplication.getQualification());
     }
 
     @Test(expected = FundsNotAvailableException.class)
-    public void loanWarningWhenIhaveInsufficientFunds(){
+    public void loanWarningWhenIhaveInsufficientFunds() {
         LoanApplication loanApplication = new LoanApplication(550000d, 21, 700,
                 100000, "", 0, "", LocalDate.of(2023, 1, 24));
         lender.checkLoanApplication(loanApplication);
-        assertEquals("on hold",loanApplication.getStatus());
+        assertEquals("on hold", loanApplication.getStatus());
     }
 
     /*
