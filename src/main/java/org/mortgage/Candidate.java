@@ -15,10 +15,6 @@ public class Candidate {
         return loanApplication;
     }
 
-    public void setLoanApplication(LoanApplication loanApplication) {
-        this.loanApplication = loanApplication;
-    }
-
     public void acceptLoanOffer(LoanApplication loanApplication) {
         lender.setPendingFunds(lender.getPendingFunds() - loanApplication.getRequestedAmount());
         loanApplication.setStatus("accepted");

@@ -1,5 +1,8 @@
 package org.mortgage;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 public class Lender {
     private double availableFunds;
     private double pendingFunds;
@@ -66,5 +69,16 @@ public class Lender {
             return true;
         }
 
+    }
+
+    public void checkForExpiration(LoanApplication loanApplication) {
+        Period period = Period.between(loanApplication.getApprovedDate(), LocalDate.now());
+        int diff = Math.abs(period.getDays());
+        if(diff >= 3) {
+            //Then the loan amount is move from the pending funds back to available funds
+            this.setAvailableFunds(this.getAvailableFunds() + this.getPendingFunds());
+            this.setPendingFunds(this.getPendingFunds() - loanApplication.getRequestedAmount());
+            loanApplication.setStatus("expired");
+        }
     }
 }

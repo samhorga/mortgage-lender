@@ -1,5 +1,8 @@
 package org.mortgage;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 public class LoanApplication {
 
     private double requestedAmount;
@@ -9,8 +12,10 @@ public class LoanApplication {
     private String qualification;
     private double loan_amount;
     private String status;
+    private LocalDate approvedDate;
 
-    public LoanApplication(double requestedAmount, int dti, int creditScore, double savings, String qualification, double loan_amount, String status) {
+    public LoanApplication(double requestedAmount, int dti, int creditScore, double savings,
+                           String qualification, double loan_amount, String status, LocalDate approvedDate) {
         this.requestedAmount = requestedAmount;
         this.dti = dti;
         this.creditScore = creditScore;
@@ -18,6 +23,11 @@ public class LoanApplication {
         this.qualification = qualification;
         this.loan_amount = loan_amount;
         this.status = status;
+        this.approvedDate = approvedDate;
+    }
+
+    public LocalDate getApprovedDate() {
+        return approvedDate;
     }
 
     public double getRequestedAmount() {
@@ -59,4 +69,6 @@ public class LoanApplication {
     public void setLoan_amount(double loan_amount) {
         this.loan_amount = loan_amount;
     }
+
+
 }

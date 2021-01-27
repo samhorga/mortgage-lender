@@ -3,6 +3,10 @@ package org.mortgage;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 
 public class LenderTests {
@@ -44,14 +48,16 @@ Then I should see a warning to not proceed
 
     @Test
 public void approveLoansOnlyWhenIhaveAvailableFunds(){
-        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2023, 1, 24));
         String expected = lender.checkLoanApplication(loanApplication);
         assertEquals(expected,loanApplication.getQualification());
     }
 
     @Test
     public void loanWarningWhenIhaveInsufficientFunds(){
-        LoanApplication loanApplication = new LoanApplication(550000d, 21, 700, 100000, "", 0, "");
+        LoanApplication loanApplication = new LoanApplication(550000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2023, 1, 24));
         assertEquals("Funds not available!! Do not Proceed!!",lender.checkLoanApplication(loanApplication));
         assertEquals("on hold",loanApplication.getStatus());
     }
@@ -63,7 +69,8 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
     */
     @Test
     public void moveAvailableFundsToPendingFundsIfApproved() {
-        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2023, 1, 24));
         double expectedAvailableFunds = lender.getAvailableFunds() - loanApplication.getRequestedAmount();
         double expectedPendingFunds = loanApplication.getRequestedAmount();
         lender.checkLoanApplication(loanApplication);
@@ -80,7 +87,8 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
 
     @Test
     public void processAprovedLoan() {
-        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2023, 1, 24));
         lender.checkLoanApplication(loanApplication);
         candidate = new Candidate(loanApplication, lender);
         candidate.acceptLoanOffer(loanApplication);
@@ -97,17 +105,35 @@ public void approveLoansOnlyWhenIhaveAvailableFunds(){
      */
     @Test
     public void processRejectedLoan() {
-        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700, 100000, "", 0, "");
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2023, 1, 24));
         lender.checkLoanApplication(loanApplication);
-        // AVAILABLE FUNDS = 400000 - 250000d = 150000
-        // PENDING FUNDS = 250000d
+
         candidate = new Candidate(loanApplication, lender);
         candidate.rejectLoanOffer(loanApplication);
-        // AVAILABLE FUNDS 250000d = 150000 + 250000d = 400000
-        // PENDING FUNDS = 0
 
         assertEquals(0, lender.getPendingFunds(), 0.1);
         assertEquals(400000, lender.getAvailableFunds(), 0.1);
         assertEquals("rejected", loanApplication.getStatus());
     }
+
+    /*
+    Given there is an approved loan offered more than 3 days ago
+    When I check for expired loans
+    Then the loan amount is move from the pending funds back to available funds
+    And the loan status is marked as expired
+     */
+    @Test
+    public void checkForExpirationOfTheLoan() {
+        LoanApplication loanApplication = new LoanApplication(250000d, 21, 700,
+                100000, "", 0, "", LocalDate.of(2021, 1, 24));
+
+        lender.checkLoanApplication(loanApplication);
+
+        lender.checkForExpiration(loanApplication);
+
+        assertEquals(400000, lender.getAvailableFunds(), 0.1);
+        assertEquals("expired", loanApplication.getStatus());
+    }
+
 }
