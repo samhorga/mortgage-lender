@@ -12,14 +12,13 @@ public class LenderTests {
     @Before
     public void setUp() {
         lender = new Lender();
+        lender.addFunds(400000);
     }
 
     /* When I check my available funds
     Then I should see how much funds I currently have*/
     @Test
     public void showLenderAvailableFunds() {
-        lender.addFunds(400000);
-
         assertEquals(400000, lender.getAvailableFunds(), 0.1);
     }
 
@@ -29,9 +28,10 @@ public class LenderTests {
 
     @Test
     public void addMoneyALender() {
-        lender.addFunds(40000);
-        lender.addFunds(10000);
+        lender.addFunds(100000);
 
-        assertEquals(50000, lender.getAvailableFunds(), 0.1);
+        assertEquals(500000, lender.getAvailableFunds(), 0.1);
     }
+
+
 }
